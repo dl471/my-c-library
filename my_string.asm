@@ -20,7 +20,3 @@ _my_strlen:
 	pop esi
 	
 	ret
-	
-_stack_test:
-	mov eax, [ESP+4]
-	ret
