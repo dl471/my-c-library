@@ -27,7 +27,7 @@ _my_strlen:
 	
 _my_memset:
 	cmp dword [esp+0x0C], 0x00   ;Immediately return if no bytes are to be copied
-	je .end
+	je .premature_end
 	
 	mov eax, dword [esp+0x04]    ;Start of pointer to write elements to
 	mov ecx, dword [esp+0x08]    ;Element to be written
@@ -43,12 +43,15 @@ _my_memset:
 	
 	pop eax;                     ;Retrieve pointer to start of string
 
-.end:
+	ret
+
+.premature_end:
+    mov eax, dword [esp+0x04]
 	ret
 	
 _my_memcpy:
 	cmp dword [esp+0x0C], 0x00   ;Immediately return if no bytes are to be copied
-	je .end
+	je .premature_end
 	
 	push dword [esp+4]           ;Create copy of pointer to destination string
 	push esi
@@ -70,5 +73,8 @@ _my_memcpy:
 	pop esi
 	pop eax                      ;Retrieve pointer to destination string
 	
-.end:
+	ret
+	
+.premature_end:
+    mov eax, dword [esp+0x04]
 	ret
