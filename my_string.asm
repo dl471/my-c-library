@@ -33,16 +33,14 @@ _my_memset:
 	push eax                     ;Create copy of pointer to start of string
 	
 .write_element:
-	cmp edx, 0x00
-	je .end
 	mov byte [eax], cl
-	dec edx
 	inc eax
-	jmp .write_element
+	dec edx
+	jnz .write_element
 	
-.end:
 	pop eax;                     ;Retrieve pointer to start of string
 
+.end:
 	ret
 	
 _my_memcpy:
