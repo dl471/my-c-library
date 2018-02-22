@@ -26,6 +26,9 @@ _my_strlen:
 	ret
 	
 _my_memset:
+	cmp dword [esp+0x0C], 0x00   ;Immediately return if no bytes are to be copied
+	je .end
+	
 	mov eax, dword [esp+0x04]    ;Start of pointer to write elements to
 	mov ecx, dword [esp+0x08]    ;Element to be written
 	mov edx, dword [esp+0x0C]    ;Number of elements to be written
