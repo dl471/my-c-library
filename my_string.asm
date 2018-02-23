@@ -4,6 +4,8 @@ GLOBAL _my_memset
     EXPORT _my_memset
 GLOBAL _my_memcpy
     EXPORT _my_memcpy
+GLOBAL _my_memchr
+    EXPORT _my_memchr
 
 section .text
 
@@ -79,4 +81,28 @@ _my_memcpy:
     mov eax, dword [esp+0x04]
     ret
     
+_my_memchr:
+    cmp dword [esp+0x0C], 0x00   ;Immediately return if no bytes are to be examined
+    je .no_match_found
+    
+    mov eax, dword [esp+0x04]    ;String to search
+    mov ecx, dword [esp+0x08]    ;Byte to search for
+    mov edx, dword [esp+0x0C]    ;Number of bytes to examine
 
+.examine_byte: 
+    cmp byte [eax], cl
+    je .end
+    inc eax
+    dec edx
+    jnz .examine_byte
+ 
+.no_match_found:
+    mov eax, 0x00
+
+.end:
+    ret
+    
+
+;0x04 = search string
+;0x08 = element to find
+;0x0C = bytes to analyze
