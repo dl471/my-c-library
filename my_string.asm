@@ -10,21 +10,17 @@ GLOBAL _my_memchr
 section .text
 
 _my_strlen:
-    push esi
-    
     xor eax, eax
-    mov esi, [esp+0x08]
+    mov ecx, [esp+0x04]          ;String to measure
     
 .check:    
-    cmp byte [esi], 0x00
+    cmp byte [ecx], 0x00
     je .end
     inc eax
-    inc esi
+    inc ecx
     jmp .check    
     
-.end:    
-    pop esi
-    
+.end:
     ret
     
 _my_memset:
@@ -102,7 +98,3 @@ _my_memchr:
 .end:
     ret
     
-
-;0x04 = search string
-;0x08 = element to find
-;0x0C = bytes to analyze
