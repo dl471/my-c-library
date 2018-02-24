@@ -6,7 +6,9 @@ GLOBAL _my_memcpy
     EXPORT _my_memcpy
 GLOBAL _my_memchr
     EXPORT _my_memchr
-
+GLOBAL _my_strcpy
+    EXPORT _my_strcpy
+    
 section .text
 
 _my_strlen:
@@ -58,7 +60,7 @@ _my_memcpy:
     mov edi, dword [esp+0x10]    ;Destination string
     mov esi, dword [esp+0x14]    ;Source string
     mov eax, dword [esp+0x18]    ;Number of elements to be copied
-    
+
 .write_element:
     mov cl, byte [esi]
     mov byte [edi], cl
@@ -98,3 +100,20 @@ _my_memchr:
 .end:
     ret
     
+_my_strcpy:
+    push dword [esp+0x04]        ;Create copy of pointer to start of destination string
+    mov ecx, [esp+0x08]          ;Destination string
+    mov edx, [esp+0x0C]          ;Source string
+
+.write_element:
+    cmp byte [edx], 0x00
+    je .end
+    mov al, byte [edx]
+    mov byte [ecx], al
+    inc ecx
+    inc edx
+    jmp .write_element
+    
+.end:
+    pop eax                      ;Retreive pointer to destination strnig
+    ret
