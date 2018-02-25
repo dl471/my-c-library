@@ -8,6 +8,10 @@ GLOBAL _my_memchr
     EXPORT _my_memchr
 GLOBAL _my_strcpy
     EXPORT _my_strcpy
+GLOBAL _my_strncpy
+    EXPORT _my_strncpy
+GLOBAL _my_strncpy
+    EXPORT _my_strncpy
     
 section .text
 
@@ -116,4 +120,35 @@ _my_strcpy:
     
 .end:
     pop eax                      ;Retreive pointer to destination strnig
+    ret
+    
+_my_strncpy:
+    cmp dword [esp+0xC], 0x00    ;Immediately return if no bytes are to be copied
+    je .premature_end            
+    
+    push esi
+    push edi
+    mov edi, dword [esp+0x0C]    ;Destination string
+    mov esi, dword [esp+0x10]    ;Source string
+    xor ecx, ecx                 ;Counter
+    mov edx, dword [esp+0x14]    ;Counter target
+    
+.write_element:
+    mov al, byte [esi]
+    mov byte [edi], al
+    inc ecx
+    inc edi
+    inc esi
+    cmp ecx, edx
+    je .end
+    cmp al, 0x00
+    je .end
+    jmp .write_element
+    
+.end:
+    mov byte [edi], 0x00         ;Write null terminator to end of string
+    pop edi
+    pop esi
+.premature_end:
+    mov eax, dword [esp+0x04]    ;Retreive pointer to destination string
     ret
