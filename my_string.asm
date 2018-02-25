@@ -140,13 +140,22 @@ _my_strncpy:
     inc edi
     inc esi
     cmp ecx, edx
-    je .end
+    je .normal_end
     cmp al, 0x00
-    je .end
+    je .pad_string
     jmp .write_element
     
-.end:
-    mov byte [edi], 0x00         ;Write null terminator to end of string
+.pad_string:                   
+    cmp ecx, edx
+    je .padded_end
+    mov byte [edi], 0x00
+    inc edi
+    inc ecx
+    jmp .pad_string
+    
+.normal_end:                     ;Write null terminator to end of string
+    mov byte [edi], 0x00         
+.padded_end:                     ;Skip writing null terminator
     pop edi
     pop esi
 .premature_end:
